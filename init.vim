@@ -1,9 +1,8 @@
-"-- General Options --
 syntax on
 
 set noerrorbells "no sounds
 set encoding=utf-8
-set number relativenumber "numbered lines with relative to current
+set number "set numbers
 set spelllang=en_us "used for spell checking
 set autoindent "follow indentation
 set smartindent "change indentation smartly...
@@ -19,59 +18,63 @@ set undodir=~/.config/nvim/undodir "set undo dir as undo file (and backup)
 set hls "highlight search results
 set is "highlight current matches when searching
 set laststatus=2 "last window will always have a status line
-set cmdheight=1 "height of command line
+set cmdheight=2 "height of command line
 set noic "dont ignore case in search pattern
 set wildmenu "enhanced command line completion
 set termguicolors "enables 24-bit rgb
 set clipboard=unnamedplus "set clipboard to system
 
-"-- Key Remaps --
-"Toggle spell checking 
+call plug#begin('~/.config/nvim/plugged')
+     Plug 'morhetz/gruvbox'
+     Plug 'mbbill/undotree'
+     Plug 'scrooloose/nerdtree'
+     Plug 'sheerun/vim-polyglot'
+     Plug 'vim-airline/vim-airline'
+     Plug 'tpope/vim-commentary'
+     Plug 'tpope/vim-surround'
+     Plug 'preservim/tagbar'
+     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+     Plug 'junegunn/fzf.vim'
+     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+     Plug 'tpope/vim-characterize'
+call plug#end()
+
+autocmd FileType rust nnoremap <C-b> :Cbuild <Cr>
+autocmd FileType sh nnoremap <C-b> :!bash % <Cr>
+autocmd FileType python nnoremap <C-b> :!python3 % <Cr>
+autocmd FileType make nnoremap <C-b> :!make
+autocmd FileType dts nnoremap <C-T> :w <CR> :!dtc -O dtb -o %:r.dtb %:r.dts <CR>
+
 map <C-s> :set spell!<CR>
-
-"Toggle NERDTree
-nnoremap <C-f> :NERDTreeToggle <CR>
-
-"Clear search highlighting on <esc>
 nnoremap <esc> :noh<CR>
 
-"Toggle Undotree
+nnoremap <C-f> :NERDTreeToggle <CR>
 nnoremap <C-u> :UndotreeToggle <CR>
-
-"idk
-autocmd FileType rust nnoremap <C-b> :Cbuild <Cr>
-
-"Toggle fuzzy search
 nnoremap <F2> :Files! <CR>
 
-"Move selected lines up or down
+""Move selected lines up or down
 xnoremap <C-Up> :move '<-2<CR>gv-gv
 xnoremap <C-Down> :move '>+1<CR>gv-gv
 
-" Use <TAB> to navigate COC completion list. Space to complete.
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+" Fold comments
+nnoremap <C-1> :set foldmethod=expr foldexpr=getline(v:lnum)=~'^\\s*'.&commentstring[0] <CR>
 
-"-- Plugs --
-call plug#begin('~/.config/nvim/plugged')
-    Plug 'rust-lang/rust.vim'
-    Plug 'morhetz/gruvbox'
-    Plug 'mbbill/undotree'
-    Plug 'airblade/vim-gitgutter'
-    Plug 'scrooloose/nerdtree'
-    Plug 'sheerun/vim-polyglot'
-    Plug 'vim-airline/vim-airline'
-    Plug 'neoclide/coc.nvim', {'branch': 'release'} " :CocInstall coc-rls
-    Plug 'tpope/vim-commentary'
-    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-    Plug 'junegunn/fzf.vim'
-call plug#end()
-
-"-- Plugin Options --
 filetype plugin on
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-let g:rustfmt_autosave = 1
+let g:coc_node_path = '/usr/bin/node'
 
-"-- Style Options --
 colorscheme gruvbox
 set background=dark
 
+let g:LanguageClient_serverCommands = {
+    \ 'sh': ['bash-language-server', 'start']
+    \ }
+
+" :CocInstall coc-clangd
+""languageserver": {
+"  "clangd": {
+"    "command": "clangd",
+"    "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+"    "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"]
+"  }
+"}
