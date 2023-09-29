@@ -1,5 +1,5 @@
-syntax on
-
+syntax enable
+filetype plugin indent on
 set noerrorbells "no sounds
 set encoding=utf-8
 set number "set numbers
@@ -32,12 +32,17 @@ call plug#begin('~/.config/nvim/plugged')
      Plug 'vim-airline/vim-airline'
      Plug 'tpope/vim-commentary'
      Plug 'tpope/vim-surround'
-     Plug 'preservim/tagbar'
      Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
      Plug 'junegunn/fzf.vim'
-     Plug 'neoclide/coc.nvim', {'branch': 'release'}
      Plug 'tpope/vim-characterize'
+     Plug 'ap/vim-css-color'
+     Plug 'rhysd/vim-clang-format'
+     Plug 'kassio/neoterm'
+     Plug 'rust-lang/rust.vim'
+     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
+
+" :CocInstall coc-rust-analyzer
 
 autocmd FileType rust nnoremap <C-b> :Cbuild <Cr>
 autocmd FileType sh nnoremap <C-b> :!bash % <Cr>
@@ -50,7 +55,8 @@ nnoremap <esc> :noh<CR>
 
 nnoremap <C-f> :NERDTreeToggle <CR>
 nnoremap <C-u> :UndotreeToggle <CR>
-nnoremap <F2> :Files! <CR>
+nnoremap <F2> :Files ~/<CR>
+nnoremap <F3> :e ~/.config/nvim/init.vim<CR>
 
 ""Move selected lines up or down
 xnoremap <C-Up> :move '<-2<CR>gv-gv
@@ -61,20 +67,6 @@ nnoremap <C-1> :set foldmethod=expr foldexpr=getline(v:lnum)=~'^\\s*'.&commentst
 
 filetype plugin on
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
-let g:coc_node_path = '/usr/bin/node'
-
+let g:rustfmt_autosave = 1
 colorscheme gruvbox
 set background=dark
-
-let g:LanguageClient_serverCommands = {
-    \ 'sh': ['bash-language-server', 'start']
-    \ }
-
-" :CocInstall coc-clangd
-""languageserver": {
-"  "clangd": {
-"    "command": "clangd",
-"    "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
-"    "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"]
-"  }
-"}

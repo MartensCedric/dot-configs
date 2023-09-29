@@ -1,2 +1,1 @@
-# nvim-config
-My Neovim configuration
+nvim and tmux configs
